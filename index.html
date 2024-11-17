@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Koło Fortuny</title>
+    <link href="https://fonts.googleapis.com/css2?family=Saira+Stencil+One&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: 'Saira Stencil One', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #wheel-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+        }
+        #wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: absolute;
+            transform-origin: center;
+            transition: transform 3s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+        }
+        .segment {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            background-color: transparent;
+            clip-path: polygon(50% 50%, 100% 0, 100% 100%);
+            transform-origin: 100% 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .segment:nth-child(even) {
+            background-color: rgb(11, 142, 54);
+        }
+        .segment:nth-child(odd) {
+            background-color: rgb(190, 21, 34);
+        }
+        .segment span {
+            color: black;
+            font-size: 1.2em;
+            transform: rotate(45deg);
+        }
+        #arrow {
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 30px solid white;
+            margin-bottom: 10px;
+        }
+        #spin-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            color: white;
+            background-color: rgb(190, 21, 34);
+            border: none;
+            cursor: pointer;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 1.5em;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="arrow"></div>
+    <div id="wheel-container">
+        <div id="wheel">
+            <!-- Segmenty -->
+            <!-- Segmenty generowane dynamicznie przez JS -->
+        </div>
+    </div>
+    <button id="spin-button">Zakręć</button>
+    <div id="result"></div>
+    <script>
+        const wheel = document.getElementById('wheel');
+        const result = document.getElementById('result');
+        const spinButton = document.getElementById('spin-button');
+        const segments = [
+            "Tekst 1", "Tekst 2", "Tekst 3", "Tekst 4", "Tekst 5",
+            "Tekst 6", "Tekst 7", "Tekst 8", "Tekst 9", "Tekst 10",
+            "Tekst 11", "Tekst 12", "Tekst 13", "Tekst 14", "Tekst 15",
+            "Tekst 16", "Tekst 17", "Tekst 18", "Tekst 19", "Tekst 20"
+        ];
+
+        let currentAngle = 0;
+
+        // Generowanie segmentów koła
+        function createSegments() {
+            const fragment = document.createDocumentFragment();
+            for (let i = 0; i < 20; i++) {
+                const segment = document.createElement('div');
+                segment.className = 'segment';
+                segment.style.transform = `rotate(${i * 18}deg)`;
+                const text = document.createElement('span');
+                text.textContent = '?';
+                segment.appendChild(text);
+                fragment.appendChild(segment);
+            }
+            wheel.appendChild(fragment);
+        }
+        createSegments();
+
+        // Obracanie koła
+        spinButton.addEventListener('click', () => {
+            const randomIndex = Math.floor(Math.random() * 20);
+            const targetAngle = 360 * 5 - randomIndex * 18;
+            currentAngle += targetAngle;
+            wheel.style.transform = `rotate(${currentAngle}deg)`;
+
+            setTimeout(() => {
+                result.textContent = segments[randomIndex];
+                wheel.style.display = 'none';
+                spinButton.textContent = 'Zakręć ponownie';
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
